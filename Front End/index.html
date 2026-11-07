@@ -19,25 +19,22 @@
     <div id="feedback" class="info">Loading...</div>
 
     <div>
-      <img src="Images/b_asl.jpg" alt  = "No Image">
+      <img id="letterImage" src="Images/b_asl.jpg" alt  = "No Image">
     </div>
   </main>
 
   <script> 
     const select = document.getElementById("sign-select");
 const feedback = document.getElementById("feedback");
-const image = document.getElementById("letterImage");
+const letterImage = document.getElementById('letterImage');
 
 function setFeedback(kind, text) {
   feedback.className = kind;   // "info", "correct", or "wrong" (styled in style.css)
   feedback.textContent = text;
+  setImage();
 }
 
-function setImage(){
-  
-  image.src = `${(s.target).toLowerCase()}.gif`;
-  image.src = "a.gif";
-}
+
 // Front end -> back end: "this is the sign I'm looking for"
 async function setTarget(sign) {
   await fetch("/target", {
@@ -73,7 +70,13 @@ async function pollStatus() {
   try {
     const res = await fetch("/status");
     const s = await res.json();
-
+    const letter = `${s.target}`;
+  if(letter === "A"){
+    letterImage.src = "Images/a_asl.gif";
+  }
+  else if(letter === "B"){
+    letterImage.src = "Images/b_asl.jpg";
+  }
     if (!s.target) return;
 
     bar.style.width = s.hold_progress + "%";
@@ -90,6 +93,13 @@ async function pollStatus() {
   } catch (err) {
     setFeedback("info", "Can't reach the back end");
   }
+}
+function setImage(){
+  
+  
+  //const imageSource = `Images/${(s.target).toLowerCase()}.gif`
+  //letterImage.src = imageSource;
+  
 }
 
 select.addEventListener("change", () => setTarget(select.value));
