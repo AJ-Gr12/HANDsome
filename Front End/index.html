@@ -17,17 +17,27 @@
 
     <div id="progress"><div id="progress-fill"></div></div>
     <div id="feedback" class="info">Loading...</div>
+
+    <div>
+      <img src="Images/b_asl.jpg" alt  = "No Image">
+    </div>
   </main>
 
   <script> 
     const select = document.getElementById("sign-select");
 const feedback = document.getElementById("feedback");
+const image = document.getElementById("letterImage");
 
 function setFeedback(kind, text) {
   feedback.className = kind;   // "info", "correct", or "wrong" (styled in style.css)
   feedback.textContent = text;
 }
 
+function setImage(){
+  
+  image.src = `${(s.target).toLowerCase()}.gif`;
+  image.src = "a.gif";
+}
 // Front end -> back end: "this is the sign I'm looking for"
 async function setTarget(sign) {
   await fetch("/target", {
