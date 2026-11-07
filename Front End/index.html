@@ -65,9 +65,9 @@ async function pollStatus() {
     if (!s.hand_visible) {
       setFeedback("info", "Show your hand to the camera");
     } else if (s.correct) {
-      setFeedback("correct", 'Correct! Thats ${s.target}');
+      setFeedback("correct", `Correct! That's ${s.target}`);
     } else {
-      setFeedback("wrong", 'Not quite, keep trying ${s.target}');
+      setFeedback("wrong", `Not quite, keep trying ${s.target}`);
     }
   } catch (err) {
     setFeedback("info", "Can't reach the back end");
