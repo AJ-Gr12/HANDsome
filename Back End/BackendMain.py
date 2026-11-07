@@ -36,7 +36,8 @@ HAND_CONNECTIONS = [
 lock = threading.Lock()
 state = {"target": None, "detected": None, "score": None,
          "correct": False, "hand_visible": False,
-         "matching": False, "hold_progress": 0}
+         "matching": False, "hold_progress": 0,
+         "kind": "static", "phase": None}
 latest_jpeg = None
 
 if os.path.exists(REF_PATH):

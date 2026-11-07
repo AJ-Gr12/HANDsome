@@ -65,24 +65,36 @@ async function loadSigns() {
 
 // Back end -> front end: "is it correct right now?"
 const bar = document.getElementById("progress-fill");
+const progress = document.getElementById("progress");
 
 async function pollStatus() {
   try {
     const res = await fetch("/status");
     const s = await res.json();
-    const letter = `${s.target}`;
-  if(letter === "A"){
-    letterImage.src = "Images/a_asl.gif";
-  }
-  else if(letter === "B"){
-    letterImage.src = "Images/b_asl.jpg";
-  }
+
     if (!s.target) return;
 
+    const isMotion = s.kind === "motion";
+
+    // The hold bar only makes sense for static letters
+    progress.style.display = isMotion ? "none" : "block";
     bar.style.width = s.hold_progress + "%";
 
-    if (!s.hand_visible) {
+    if (isMotion && s.phase === "done") {
+      // Check this first, since the hand may have left the frame by now
+      if (s.correct) {
+        setFeedback("correct", `Correct! That's ${s.target}`);
+      } else {
+        setFeedback("wrong", "Not quite, try again");
+      }
+    } else if (!s.hand_visible) {
       setFeedback("info", "Show your hand to the camera");
+    } else if (isMotion) {
+      if (s.phase === "recording") {
+        setFeedback("info", "Keep going...");
+      } else {
+        setFeedback("info", "Make the starting handshape, then move");
+      }
     } else if (s.correct) {
       setFeedback("correct", `Correct! That's ${s.target}`);
     } else if (s.matching) {
