@@ -15,6 +15,7 @@
 
     <img id="video" src="/video" alt="Live camera feed">
 
+    <div id="progress"><div id="progress-fill"></div></div>
     <div id="feedback" class="info">Loading...</div>
   </main>
 
@@ -56,16 +57,23 @@ async function loadSigns() {
 }
 
 // Back end -> front end: "is it correct right now?"
+const bar = document.getElementById("progress-fill");
+
 async function pollStatus() {
   try {
     const res = await fetch("/status");
     const s = await res.json();
 
     if (!s.target) return;
+
+    bar.style.width = s.hold_progress + "%";
+
     if (!s.hand_visible) {
       setFeedback("info", "Show your hand to the camera");
     } else if (s.correct) {
       setFeedback("correct", `Correct! That's ${s.target}`);
+    } else if (s.matching) {
+      setFeedback("info", `Hold it... ${s.hold_progress}%`);
     } else {
       setFeedback("wrong", `Not quite, keep trying ${s.target}`);
     }

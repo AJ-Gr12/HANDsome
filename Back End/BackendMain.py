@@ -18,6 +18,9 @@ REF_PATH = os.path.join(HERE, "references.json")
 THRESHOLDS = {"A": 0.12, "S": 0.12, "T": 0.12, "N": 0.12, "M": 0.12, "E": 0.12}   # only the letters that need a custom value
 DEFAULT_THRESHOLD = 0.15
 
+HOLD_SECONDS = 1.0   # how long the sign must be held
+GRACE = 0.25         # forgive brief tracking flickers so the timer doesn't reset
+
 HAND_CONNECTIONS = [
     (0, 1), (1, 2), (2, 3), (3, 4),
     (0, 5), (5, 6), (6, 7), (7, 8),
@@ -30,7 +33,8 @@ HAND_CONNECTIONS = [
 # Shared between the camera thread and the web endpoints
 lock = threading.Lock()
 state = {"target": None, "detected": None, "score": None,
-         "correct": False, "hand_visible": False}
+         "correct": False, "hand_visible": False,
+         "matching": False, "hold_progress": 0}
 latest_jpeg = None
 
 if os.path.exists(REF_PATH):
@@ -62,6 +66,10 @@ def camera_loop():
     start = time.time()
     last_ts = -1
 
+    hold_start = None
+    last_match = 0.0
+    last_target = None
+
     with vision.HandLandmarker.create_from_options(options) as landmarker:
         while True:
             ok, frame = cap.read()
@@ -87,22 +95,35 @@ def camera_loop():
                 current = normalize(hand)
 
             with lock:
-                if current is None:
-                    state.update(hand_visible=False, detected=None,
-                                 score=None, correct=False)
-                else:
-                    target = state["target"]
-                    if target in references:
-                        target_score = score(current, references[target])
-                        state.update(
-                            hand_visible=True,
-                            detected=None,
-                            score=round(target_score, 3),
-                            correct=target_score < THRESHOLDS.get(target, DEFAULT_THRESHOLD),
-                        )
-                    else:
-                        state.update(hand_visible=True, detected=None,
-                                     score=None, correct=False)
+                target = state["target"]
+                if target != last_target:       # switched letters, start over
+                    hold_start = None
+                    last_target = target
+
+                matching = False
+                target_score = None
+                if current is not None and target in references:
+                    target_score = score(current, references[target])
+                    matching = target_score < THRESHOLDS.get(target, DEFAULT_THRESHOLD)
+
+                now = time.monotonic()
+                if matching:
+                    last_match = now
+                    if hold_start is None:
+                        hold_start = now
+                elif hold_start is not None and now - last_match > GRACE:
+                    hold_start = None
+
+                progress = 0.0 if hold_start is None else min((now - hold_start) / HOLD_SECONDS, 1.0)
+
+                state.update(
+                    hand_visible=current is not None,
+                    detected=None,
+                    score=None if target_score is None else round(target_score, 3),
+                    matching=matching,
+                    hold_progress=round(progress * 100),
+                    correct=progress >= 1.0,
+                )
 
             
 
