@@ -14,6 +14,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(HERE, "hand_landmarker.task")
 REF_PATH = os.path.join(HERE, "references.json")
 
+OVERLAY_ALPHA = 0.33
+
 
 THRESHOLDS = {"A": 0.15, "S": 0.15, "T": 0.15, "N": 0.15, "M": 0.15, "E": 0.15}   # only the letters that need a custom value
 DEFAULT_THRESHOLD = 0.2
@@ -86,13 +88,17 @@ def camera_loop():
 
             current = None
             h, w, _ = frame.shape
+            overlay = frame.copy()          # draw on a copy, not the real frame
             for hand in result.hand_landmarks:
                 pts = [(int(lm.x * w), int(lm.y * h)) for lm in hand]
                 for a, b in HAND_CONNECTIONS:
-                    cv2.line(frame, pts[a], pts[b], (0, 255, 0), 2)
+                    cv2.line(overlay, pts[a], pts[b], (0, 255, 0), 2)
                 for p in pts:
-                    cv2.circle(frame, p, 5, (0, 0, 255), -1)
+                    cv2.circle(overlay, p, 5, (0, 0, 255), -1)
                 current = normalize(hand)
+
+            # blend the copy over the original
+            frame = cv2.addWeighted(overlay, OVERLAY_ALPHA, frame, 1 - OVERLAY_ALPHA, 0)
 
             with lock:
                 target = state["target"]
