@@ -101,7 +101,8 @@ def camera_loop():
 
 # ---------- Web server ----------
 # static_folder="static" + static_url_path="" serves static/script.js at /script.js, etc.
-app = Flask(__name__, static_folder="static", static_url_path="")
+FRONT_END = os.path.join(HERE, "..", "Front End")
+app = Flask(__name__, static_folder=FRONT_END, static_url_path="")
 
 
 @app.get("/")
