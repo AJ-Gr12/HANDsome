@@ -13,7 +13,10 @@ from mediapipe.tasks.python import vision
 HERE = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(HERE, "hand_landmarker.task")
 REF_PATH = os.path.join(HERE, "references.json")
-THRESHOLD = 0.35
+
+
+THRESHOLDS = {"A": 0.12, "S": 0.12, "T": 0.12, "N": 0.12, "M": 0.12, "E": 0.12}   # only the letters that need a custom value
+DEFAULT_THRESHOLD = 0.15
 
 HAND_CONNECTIONS = [
     (0, 1), (1, 2), (2, 3), (3, 4),
@@ -88,15 +91,14 @@ def camera_loop():
                     state.update(hand_visible=False, detected=None,
                                  score=None, correct=False)
                 else:
-                    scores = {k: score(current, ref) for k, ref in references.items()}
-                    if scores:
-                        detected, _ = min(scores.items(), key=lambda p: p[1])
-                        target_score = scores.get(state["target"])
+                    target = state["target"]
+                    if target in references:
+                        target_score = score(current, references[target])
                         state.update(
                             hand_visible=True,
-                            detected=detected,
-                            score=None if target_score is None else round(target_score, 3),
-                            correct=target_score is not None and target_score < THRESHOLD,
+                            detected=None,
+                            score=round(target_score, 3),
+                            correct=target_score < THRESHOLDS.get(target, DEFAULT_THRESHOLD),
                         )
                     else:
                         state.update(hand_visible=True, detected=None,
