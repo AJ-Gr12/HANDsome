@@ -89,14 +89,20 @@ def camera_loop():
                                  score=None, correct=False)
                 else:
                     scores = {k: score(current, ref) for k, ref in references.items()}
-                    detected, _ = min(scores.items(), key=lambda p: p[1])
-                    target_score = scores.get(state["target"])
-                    state.update(
-                        hand_visible=True,
-                        detected=detected,
-                        score=None if target_score is None else round(target_score, 3),
-                        correct=target_score is not None and target_score < THRESHOLD,
-                    )
+                    if scores:
+                        detected, _ = min(scores.items(), key=lambda p: p[1])
+                        target_score = scores.get(state["target"])
+                        state.update(
+                            hand_visible=True,
+                            detected=detected,
+                            score=None if target_score is None else round(target_score, 3),
+                            correct=target_score is not None and target_score < THRESHOLD,
+                        )
+                    else:
+                        state.update(hand_visible=True, detected=None,
+                                     score=None, correct=False)
+
+            print("after scoring", flush=True)
 
             _, buf = cv2.imencode(".jpg", frame)
             with lock:
