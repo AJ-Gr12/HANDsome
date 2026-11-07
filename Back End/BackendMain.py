@@ -15,8 +15,8 @@ MODEL_PATH = os.path.join(HERE, "hand_landmarker.task")
 REF_PATH = os.path.join(HERE, "references.json")
 
 
-THRESHOLDS = {"A": 0.12, "S": 0.12, "T": 0.12, "N": 0.12, "M": 0.12, "E": 0.12}   # only the letters that need a custom value
-DEFAULT_THRESHOLD = 0.15
+THRESHOLDS = {"A": 0.15, "S": 0.15, "T": 0.15, "N": 0.15, "M": 0.15, "E": 0.15}   # only the letters that need a custom value
+DEFAULT_THRESHOLD = 0.2
 
 HOLD_SECONDS = 1.0   # how long the sign must be held
 GRACE = 0.25         # forgive brief tracking flickers so the timer doesn't reset
