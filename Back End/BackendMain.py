@@ -30,8 +30,12 @@ state = {"target": None, "detected": None, "score": None,
          "correct": False, "hand_visible": False}
 latest_jpeg = None
 
-with open(REF_PATH) as f:
-    references = {k: np.array(v) for k, v in json.load(f).items()}
+if os.path.exists(REF_PATH):
+    with open(REF_PATH) as f:
+        references = {k: np.array(v) for k, v in json.load(f).items()}
+else:
+    references = {}
+    print("No references.json found. Record some signs first.")
 
 
 def normalize(hand):
