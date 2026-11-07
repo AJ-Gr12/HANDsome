@@ -20,7 +20,7 @@ OVERLAY_ALPHA = 0.33
 THRESHOLDS = {"A": 0.15, "S": 0.15, "T": 0.15, "N": 0.15, "M": 0.15, "E": 0.15}   # only the letters that need a custom value
 DEFAULT_THRESHOLD = 0.2
 
-HOLD_SECONDS = 1.0   # how long the sign must be held
+HOLD_SECONDS = 0.75   # how long the sign must be held
 GRACE = 0.25         # forgive brief tracking flickers so the timer doesn't reset
 
 HAND_CONNECTIONS = [
@@ -49,7 +49,7 @@ else:
 
 MOTION_TIPS = {"J": 20, "Z": 8}   # J follows the pinky tip, Z the index tip
 MOTION_FILE = os.path.join(HERE, "motion_references.json")
-MOTION_THRESHOLD = 0.25           # path match strictness (tune this)
+MOTION_THRESHOLD = 0.3           # path match strictness (tune this)
 MOVE_START = 0.4                  # how far the tip must move to begin (in hand sizes)
 STILL_SPEED = 0.02                # per-frame movement below this counts as still
 STILL_SECONDS = 0.3               # standing still this long ends the attempt
@@ -110,6 +110,7 @@ class MotionTracker:
         self.last_move = 0.0
         self.result_until = 0.0
         self.correct = False
+
 
     def output(self):
         return {"phase": self.phase, "correct": self.correct}
