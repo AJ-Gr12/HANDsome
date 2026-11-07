@@ -102,7 +102,7 @@ def camera_loop():
                         state.update(hand_visible=True, detected=None,
                                      score=None, correct=False)
 
-            print("after scoring", flush=True)
+            
 
             _, buf = cv2.imencode(".jpg", frame)
             with lock:
