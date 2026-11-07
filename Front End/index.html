@@ -24,9 +24,11 @@
   </main>
 
   <script> 
+  
     const select = document.getElementById("sign-select");
 const feedback = document.getElementById("feedback");
 const letterImage = document.getElementById('letterImage');
+
 
 function setFeedback(kind, text) {
   feedback.className = kind;   // "info", "correct", or "wrong" (styled in style.css)
@@ -72,6 +74,10 @@ async function pollStatus() {
     const res = await fetch("/status");
     const s = await res.json();
 
+    //Changes Image
+    letterImage.src = `Images/${(s.target).toLowerCase()}_asl.jpg`;
+    
+
     if (!s.target) return;
 
     const isMotion = s.kind === "motion";
@@ -105,14 +111,11 @@ async function pollStatus() {
   } catch (err) {
     setFeedback("info", "Can't reach the back end");
   }
+
+  
+    
 }
-function setImage(){
-  
-  
-  //const imageSource = `Images/${(s.target).toLowerCase()}.gif`
-  //letterImage.src = imageSource;
-  
-}
+
 
 select.addEventListener("change", () => setTarget(select.value));
 
