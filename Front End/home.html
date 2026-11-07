@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Web Page</title>
+
+    <style>
+        #videoElement {
+            width: 100%;
+            max-width: 500px;
+            background-color: #333;
+            
+            /* This line flips the video horizontally */
+            transform: scaleX(-1);
+            -webkit-transform: scaleX(-1); /* For Safari support */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Video Test</h1>
+    <p>Please Work</p>
+
+
+
+    <h2>Camera</h2>
+    <video autoplay="true" id="videoElement"></video>
+
+    <script>
+        const video = document.querySelector("#videoElement");
+
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function (stream) {
+                    video.srcObject = stream;
+                })
+                .catch(function (error) {
+                    console.error("Camera access denied or unavailable.", error);
+                });
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign Language Trainer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <h1>Sign Language Trainer</h1>
+
+    <label for="sign-select">Sign to practice</label>
+    <select id="sign-select"></select>
+
+    <img id="video" src="/video" alt="Live camera feed">
+
+    <div id="feedback" class="info">Loading...</div>
+  </main>
+
+  <script> 
+    const select = document.getElementById("sign-select");
+const feedback = document.getElementById("feedback");
+
+function setFeedback(kind, text) {
+  feedback.className = kind;   // "info", "correct", or "wrong" (styled in style.css)
+  feedback.textContent = text;
+}
+
+// Front end -> back end: "this is the sign I'm looking for"
+async function setTarget(sign) {
+  await fetch("/target", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ sign }),
+  });
+}
+
+async function loadSigns() {
+  const res = await fetch("/signs");
+  const data = await res.json();
+
+  select.innerHTML = "";
+  for (const sign of data.signs) {
+    const option = document.createElement("option");
+    option.value = sign;
+    option.textContent = sign;
+    select.appendChild(option);
+  }
+
+  if (data.signs.length > 0) {
+    setTarget(data.signs[0]);
+  } else {
+    setFeedback("info", "No signs saved yet. Record some references first.");
+  }
+}
+
+// Back end -> front end: "is it correct right now?"
+async function pollStatus() {
+  try {
+    const res = await fetch("/status");
+    const s = await res.json();
+
+    if (!s.target) return;
+    if (!s.hand_visible) {
+      setFeedback("info", "Show your hand to the camera");
+    } else if (s.correct) {
+      setFeedback("correct", 'Correct! Thats ${s.target}');
+    } else {
+      setFeedback("wrong", 'Not quite, keep trying ${s.target}');
+    }
+  } catch (err) {
+    setFeedback("info", "Can't reach the back end");
+  }
+}
+
+select.addEventListener("change", () => setTarget(select.value));
+
+loadSigns();
+setInterval(pollStatus, 300);   // ask for status 3 times a second
+  </script>
+</body>
+</html>
