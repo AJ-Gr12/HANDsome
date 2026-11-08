@@ -19,9 +19,7 @@
     <div id="progress"><div id="progress-fill"></div></div>
     <div id="feedback" class="info">Loading...</div>
 
-    <div>
-      <img id="letterImage" src="Images/b_asl.jpg" alt  = "No Image">
-    </div>
+    
 
   </div>
 
@@ -32,24 +30,14 @@
       <option value = "practice">Practice</option>
     </select>
 
+    <div>
+      <img id="letterImage" src="Images/b_asl.jpg" alt  = "No Image">
+    </div>
+
     </div>
   </div>
   
-  <section>
-    
- 
-    <section id="left">
-      
-    
-
-    
-    </section>
-
-    <section id="right">
-    
-  </section>
- 
-  </section>
+  
 
   
 
@@ -63,7 +51,7 @@ const letterImage = document.getElementById('letterImage');
 function setFeedback(kind, text) {
   feedback.className = kind;   // "info", "correct", or "wrong" (styled in style.css)
   feedback.textContent = text;
-  setImage();
+  
 }
 
 
