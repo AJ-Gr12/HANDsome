@@ -52,12 +52,17 @@ const select = document.getElementById("sign-select");
 const feedback = document.getElementById("feedback");
 const letterImage = document.getElementById('letterImage');
 const mode = document.getElementById("modeSelect");
+const currentLetter = document.getElementById("sign-select");
 
 
 function setFeedback(kind, text) {
   feedback.className = kind;   // "info", "correct", or "wrong" (styled in style.css)
   feedback.textContent = text;
-  
+  if(kind === "correct"){
+     if(mode.selectedIndex === 1){
+        currentLetter.selectedIndex++;
+      }
+  }
 }
 
 
@@ -119,9 +124,7 @@ async function pollStatus() {
       // Check this first, since the hand may have left the frame by now
       if (s.correct) {
         setFeedback("correct", `Correct! That's ${s.target}`);
-        if(mode.value === "learn"){
-        mode.selectedIndex++;
-      }
+       
       } else {
         setFeedback("wrong", "Not quite, try again");
       }
