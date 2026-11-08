@@ -17,7 +17,7 @@ REF_PATH = os.path.join(HERE, "references.json")
 OVERLAY_ALPHA = 0.33
 
 
-THRESHOLDS = {"A": 0.15, "S": 0.15, "T": 0.15, "N": 0.15, "M": 0.15, "E": 0.15}   # only the letters that need a custom value
+THRESHOLDS = {"A": 0.15, "S": 0.15, "T": 0.15, "N": 0.15, "M": 0.15, "E": 0.15, "J": 0.25, "Z": 0.25}   # only the letters that need a custom value
 DEFAULT_THRESHOLD = 0.2
 
 HOLD_SECONDS = 0.75   # how long the sign must be held
