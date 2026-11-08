@@ -135,6 +135,10 @@ async function pollStatus() {
       advance();
     }
 
+    if (s.correct && mode.value === "quiz" && s.target === select.value) {
+      advance();
+    }
+
     // The hold bar only makes sense for static letters
     progress.style.display = isMotion ? "none" : "block";
     bar.style.width = s.hold_progress + "%";
