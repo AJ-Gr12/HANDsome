@@ -152,7 +152,7 @@ async function pollStatus() {
 select.addEventListener("change", () => setTarget(select.value));
 
 loadSigns();
-setInterval(pollStatus, 300);   // ask for status 3 times a second
+setInterval(pollStatus, 100);   // ask for status 3 times a second
   </script>
 </body>
 </html>
