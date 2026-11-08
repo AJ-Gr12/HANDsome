@@ -6,6 +6,7 @@ body{
 img#letterImage {
     width: 300px;
     height: 300px;
+    border: 8px solid #0d261b;
 }
 
 .container {
@@ -24,14 +25,18 @@ img#letterImage {
 }
 
 h1{
+    background-color: #d0d4c5;
     color: #0d261b;
     font-size: 80px;
+    border: 8px solid #0d261b;
 }
 
 #video{
     display: flex;
     justify-content: center;
     align-items: center;
+    border: 8px solid #0d261b;
+
 }
 
 #modeSelect{
@@ -39,14 +44,15 @@ h1{
     margin: 10px;
     width: 80%;
     padding: 10px;
-    background-color: #406e49;
+    background-color: #d0d4c5;
+    border: 4px solid #0d261b;
 }
 
 #sign-select{
     font-size: 60px;
     margin: 10px;
-    background-color: #406e49;
-   
+    background-color: #d0d4c5;
+   border: 4px solid #0d261b;
 }
 
 label{
