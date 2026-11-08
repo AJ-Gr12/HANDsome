@@ -58,11 +58,6 @@ const currentLetter = document.getElementById("sign-select");
 function setFeedback(kind, text) {
   feedback.className = kind;   // "info", "correct", or "wrong" (styled in style.css)
   feedback.textContent = text;
-  if(kind === "correct"){
-     if(mode.selectedIndex === 1){
-        currentLetter.selectedIndex++;
-      }
-  }
 }
 
 
@@ -74,6 +69,28 @@ async function setTarget(sign) {
     body: JSON.stringify({ sign }),
   });
 }
+
+
+let advancing = false;
+
+function advance() {
+  if (advancing) return;
+  advancing = true;
+
+  // Short pause so the person sees "Correct!" before the letter changes
+  setTimeout(async () => {
+    const next = select.selectedIndex + 1;
+    if (next < select.options.length) {
+      select.selectedIndex = next;
+      await setTarget(select.value);   // this is what tells the back end
+    } else {
+      setFeedback("correct", "You finished every letter!");
+    }
+    advancing = false;
+  }, 800);
+}
+
+
 
 async function loadSigns() {
   const res = await fetch("/signs");
@@ -106,15 +123,15 @@ async function pollStatus() {
     
 
       
-    
+    if (!s.target) return;
 
     //Changes Image
     letterImage.src = `Images/${(s.target).toLowerCase()}_asl.jpg`;
     
-
-    if (!s.target) return;
-
     const isMotion = s.kind === "motion";
+    if (s.correct && mode.value === "learn" && s.target === select.value) {
+      advance();
+    }
 
     // The hold bar only makes sense for static letters
     progress.style.display = isMotion ? "none" : "block";
