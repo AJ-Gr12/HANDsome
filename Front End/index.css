@@ -1,3 +1,8 @@
+body{
+    background-color: #0d261b;
+}
+
+
 img#letterImage {
     width: 300px;
     height: 300px;
@@ -12,14 +17,14 @@ img#letterImage {
 .column {
     display: flex;
     flex-direction: column;
-  background-color: #769E77;
+  background-color: #769e77;
   padding: 15px;
   justify-content: center;
   align-items: center;
 }
 
 h1{
-    color: #00261B;
+    color: #0d261b;
     font-size: 80px;
 }
 
@@ -34,12 +39,13 @@ h1{
     margin: 10px;
     width: 80%;
     padding: 10px;
+    background-color: #406e49;
 }
 
 #sign-select{
     font-size: 60px;
     margin: 10px;
-    
+    background-color: #406e49;
    
 }
 
