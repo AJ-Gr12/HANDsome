@@ -43,9 +43,10 @@
 
   <script> 
   
-    const select = document.getElementById("sign-select");
+const select = document.getElementById("sign-select");
 const feedback = document.getElementById("feedback");
 const letterImage = document.getElementById('letterImage');
+const mode = document.getElementById("modeSelect");
 
 
 function setFeedback(kind, text) {
@@ -90,7 +91,10 @@ const progress = document.getElementById("progress");
 async function pollStatus() {
   try {
     const res = await fetch("/status");
-    const s = await res.json();
+    
+      const s = await res.json();
+    
+    
 
     //Changes Image
     letterImage.src = `Images/${(s.target).toLowerCase()}_asl.jpg`;
