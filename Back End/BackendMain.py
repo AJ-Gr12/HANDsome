@@ -49,7 +49,7 @@ else:
 
 MOTION_TIPS = {"J": 20, "Z": 8}   # J follows the pinky tip, Z the index tip
 MOTION_FILE = os.path.join(HERE, "motion_references.json")
-MOTION_THRESHOLD = 0.3           # path match strictness (tune this)
+MOTION_THRESHOLD = 0.35           # path match strictness (tune this)
 MOVE_START = 0.4                  # how far the tip must move to begin (in hand sizes)
 STILL_SPEED = 0.02                # per-frame movement below this counts as still
 STILL_SECONDS = 0.3               # standing still this long ends the attempt
