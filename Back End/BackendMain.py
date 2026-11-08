@@ -281,6 +281,7 @@ def camera_loop():
                     progress = 0.0 if hold_start is None else min((now - hold_start) / HOLD_SECONDS, 1.0)
 
                     state.update(
+                        kind = "static",
                         hand_visible=current is not None,
                         detected=None,
                         score=None if target_score is None else round(target_score, 3),
