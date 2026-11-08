@@ -37,7 +37,7 @@ lock = threading.Lock()
 state = {"target": None, "detected": None, "score": None,
          "correct": False, "hand_visible": False,
          "matching": False, "hold_progress": 0,
-         "kind": "static", "phase": None}
+         "kind": "static", "phase": None, "hint": None}
 latest_jpeg = None
 
 if os.path.exists(REF_PATH):
@@ -57,6 +57,24 @@ MAX_ATTEMPT_SECONDS = 2.5
 MIN_PATH_LENGTH = 1.0             # rejects tiny wobbles
 RESULT_SECONDS = 2.0              # how long "done" stays on screen
 TEMPLATE_MODE = False             # set True to record new templates
+
+
+
+FINGERS = {
+    "thumb": range(1, 5),
+    "index": range(5, 9),
+    "middle": range(9, 13),
+    "ring": range(13, 17),
+    "pinky": range(17, 21),
+}
+HINT_MIN = 0.15   # a finger must be at least this far off to get a hint (tune this)
+
+
+def worst_finger(current, ref):
+    dists = np.linalg.norm(current - ref, axis=1)
+    errors = {name: float(np.mean(dists[list(idx)])) for name, idx in FINGERS.items()}
+    name = max(errors, key=errors.get)
+    return name if errors[name] > HINT_MIN else None
 
 if os.path.exists(MOTION_FILE):
     with open(MOTION_FILE) as f:
@@ -269,7 +287,17 @@ def camera_loop():
                         matching=matching,
                         hold_progress=round(progress * 100),
                         correct=progress >= 1.0,
+                        # hint=hint
                     )
+
+                    # matching = False
+                    # target_score = None
+                    # hint = None
+                    # if current is not None and target in references:
+                    #     target_score = score(current, references[target])
+                    #     matching = target_score < THRESHOLDS.get(target, DEFAULT_THRESHOLD)
+                    #     if not matching:
+                    #         hint = worst_finger(current, references[target])
 
             
 
