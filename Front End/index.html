@@ -27,7 +27,7 @@
     <div class="column">
       <select id="modeSelect">'
       <option value = "tryonyourown">Try on Your Own</option>
-      <option value = "practice">Practice</option>
+      <option value = "learn">Learn</option>
     </select>
 
     <div>
@@ -94,6 +94,8 @@ async function pollStatus() {
     
       const s = await res.json();
     
+
+      
     
 
     //Changes Image
@@ -112,6 +114,9 @@ async function pollStatus() {
       // Check this first, since the hand may have left the frame by now
       if (s.correct) {
         setFeedback("correct", `Correct! That's ${s.target}`);
+        if(mode.value === "learn"){
+        mode.selectedIndex++;
+      }
       } else {
         setFeedback("wrong", "Not quite, try again");
       }
