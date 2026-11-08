@@ -10,6 +10,48 @@ img#letterImage {
   gap: 20px; /* Spacing between columns */
 }
 .column {
-  background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+  background-color: #769E77;
   padding: 15px;
+  justify-content: center;
+  align-items: center;
+}
+
+h1{
+    color: #00261B;
+    font-size: 80px;
+}
+
+#video{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#modeSelect{
+    font-size: 30px;
+    margin: 10px;
+    width: 80%;
+    padding: 10px;
+}
+
+#sign-select{
+    font-size: 60px;
+    margin: 10px;
+    
+   
+}
+
+label{
+    font-size: 20px;
+}
+
+#feedback{
+    font-size: 30px;
+    
+}
+div#side{
+    flex-direction: row;
+    width: 100%;
 }
